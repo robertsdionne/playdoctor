@@ -18,7 +18,6 @@ package {
 
     public function Ekg(x : int = 0, y : int = 0) {
       super(x, y);
-      makeGraphic(1000, 200, 0x000000);
       curve = [];
       for (var i : int = 0; i < FlxG.width; ++i) {
         curve[i] = 0.0;
