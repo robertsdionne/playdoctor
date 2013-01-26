@@ -41,12 +41,12 @@ package
         public function ekgCollide():void{
             var suddenPush : int = ekg.getYCoordinateAt(_player.x + _player.width / 2.0);
             if(_player.y + _player.height > suddenPush){
-                _player.y = suddenPush - _player.height - 1.0;
+                _player.y = suddenPush - _player.height;
                 _player.velocity.y = 0.0;
-                _player.jumping = true;
+                _player.jumping = false;
                 _player.upPressLimit = 4;
             }else{
-                _player.jumping = false;
+                _player.jumping = true;
             }
         }
 
