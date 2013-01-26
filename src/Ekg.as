@@ -4,7 +4,8 @@ package {
 
   public class Ekg extends FlxSprite {
 
-    private static var FREQUENCY : Number = 2.0;
+    private static var BEATS_PER_MINUTE : Number = 120.0;
+    private static var BPM_PER_HERTZ : Number = 60.0;
     private static var MILLISECONDS_PER_SECOND : Number = 1000.0;
     private static var NOISE_AMPLITUDE : Number = 15.0;
     private static var WAVE_AMPLITUDE : Number = 100.0;
@@ -24,7 +25,7 @@ package {
       super.draw();
       var t : Number = new Date().getTime() / MILLISECONDS_PER_SECOND;
       curve = curve.slice(1);
-      curve.push(WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * FREQUENCY * t) + NOISE_AMPLITUDE * Math.random());
+      curve.push(WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * BEATS_PER_MINUTE / BPM_PER_HERTZ * t) + NOISE_AMPLITUDE * Math.random());
       var shape : Shape = new Shape();
       shape.graphics.lineStyle(3, 0xffffff);
       var startValue : Number = curve[0];
