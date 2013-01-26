@@ -4,6 +4,11 @@ package {
 
   public class Ekg extends FlxSprite {
 
+    private static var FREQUENCY : Number = 2.0;
+    private static var MILLISECONDS_PER_SECOND : Number = 1000.0;
+    private static var NOISE_AMPLITUDE : Number = 15.0;
+    private static var WAVE_AMPLITUDE : Number = 100.0;
+
     private var curve : Array;
 
     public function Ekg(x : int = 0, y : int = 0) {
@@ -17,9 +22,9 @@ package {
 
     override public function draw() : void {
       super.draw();
-      var t : Number = new Date().getTime() / 1000.0;
+      var t : Number = new Date().getTime() / MILLISECONDS_PER_SECOND;
       curve = curve.slice(1);
-      curve.push(100.0 * Math.cos(t * 6.0) + 15.0 * Math.random());
+      curve.push(WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * FREQUENCY * t) + NOISE_AMPLITUDE * Math.random());
       var shape : Shape = new Shape();
       shape.graphics.lineStyle(3, 0xffffff);
       var startValue : Number = curve[0];
