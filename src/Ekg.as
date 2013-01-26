@@ -12,8 +12,8 @@ package {
     private static var PERIOD : Number = 1.0 / FREQUENCY;
     private static var MEAN : Number =  PERIOD / 2.0;
     private static var MILLISECONDS_PER_SECOND : Number = 1000.0;
-    private static var NEW_SAMPLES : int = 10;
     private static var NOISE_AMPLITUDE : Number = 50.0;
+    private static var SAMPLES_PER_SECOND : int = 512;
     private static var VARIANCE : Number = 1.0 / (100.0 * FREQUENCY * FREQUENCY);
     private static var WAVE_AMPLITUDE : Number = 100.0;
     private static var WAVE_FREQUENCY : Number = 8.0;
@@ -23,6 +23,7 @@ package {
 
     public function Ekg(x : int = 0, y : int = 0) {
       super(x, y);
+      makeGraphic(8, 8, 0x000000);
       curve = [];
       for (var i : int = 0; i < FlxG.width; ++i) {
         curve[i] = 0.0;
@@ -32,13 +33,21 @@ package {
 
     override public function draw() : void {
       super.draw();
-      var newTime : Number = getTime();
-      curve = curve.slice(NEW_SAMPLES);
-      for (var t : Number = lastTime; t < newTime; t += (newTime - lastTime) / NEW_SAMPLES) {
-        curve.push(f(t)*g(t));
-      }
       drawCurve(curve, CURVE_THICKNESS, COLOR);
-      lastTime = newTime;
+    }
+
+    override public function update() : void {
+      super.update();
+      var newTime : Number = getTime();
+      var dt : Number = newTime - lastTime;
+      if (dt > 0.0) {
+        var newSamples : int = dt * SAMPLES_PER_SECOND;
+        curve = curve.slice(newSamples);
+        for (var t : Number = lastTime; t < newTime; t += 1.0 / SAMPLES_PER_SECOND) {
+          curve.push(f(t) * g(t));
+        }
+        lastTime = newTime;
+      }
     }
 
     private function f(t : Number) : Number {
