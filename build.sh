@@ -1,2 +1,2 @@
 #!/bin/bash
-mxmlc src/PlayDoctor.as
+mxmlc -static-link-runtime-shared-libraries=true src/PlayDoctor.as
