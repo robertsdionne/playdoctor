@@ -13,7 +13,7 @@ package {
     private static var MEAN : Number =  PERIOD / 2.0;
     private static var MILLISECONDS_PER_SECOND : Number = 1000.0;
     private static var NEW_SAMPLES : int = 10;
-    private static var NOISE_AMPLITUDE : Number = 20.0;
+    private static var NOISE_AMPLITUDE : Number = 50.0;
     private static var VARIANCE : Number = 1.0 / (100.0 * FREQUENCY * FREQUENCY);
     private static var WAVE_AMPLITUDE : Number = 100.0;
     private static var WAVE_FREQUENCY : Number = 8.0;
