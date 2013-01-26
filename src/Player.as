@@ -3,34 +3,32 @@ package{
 
     public class Player extends FlxSprite{
 
-        public function Player(x:int, y:int){
+        public function Player(x:int,y:int){
             super(x,y);
 
-            this.makeGraphic(20,20,0x4E0B1FFF)
+            makeGraphic(20,20,0xffCC0000);
 
+            var runSpeed:uint = 10;
             drag.x = runSpeed*80;
             drag.y = runSpeed*80;
+
         }
 
         override public function update():void{
             super.update();
 
-            velocity.x = 500;
-            velocity.y = fallSpeed;
-            _jumppower = 230;
             acceleration.x = 0;
-            acceleration.y = 400;
+            acceleration.y = 0;
 
             if(FlxG.keys.LEFT) {
                 acceleration.x -= drag.x;
             } else if(FlxG.keys.RIGHT){
                 acceleration.x += drag.x;
-
-            if(FlxG.keys.justPressed("UP")){
-                velocity.y = -_jumppower;
+            } else if(FlxG.keys.UP){
+                acceleration.y -= drag.y;
+            } else if(FlxG.keys.DOWN){
+                acceleration.y += drag.y;
             }
         }
     }
-    }
 }
-
