@@ -24,6 +24,8 @@ package
             _line = new Lines(_linePoints, _linePoints2);
             this.add(_line);
 
+            var sprite : FlxSprite = new Ekg(0, FlxG.height / 2.0);
+            this.add(sprite);
         }
 
         override public function update():void{

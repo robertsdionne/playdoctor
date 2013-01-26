@@ -22,7 +22,7 @@ package
             drawShape = new Shape();
             drawShape.graphics.lineStyle(1, 0x999999);
             drawShape.graphics.moveTo(point1.x, point1.y);
-            //drawShape.graphics.curveTo(0, 50, point2.x, point2.y);
+            drawShape.graphics.curveTo(0, 50, point2.x, point2.y);
             FlxG.camera.buffer.draw(drawShape);
         }
     }
