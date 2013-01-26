@@ -33,7 +33,7 @@ package {
 
     override public function draw() : void {
       super.draw();
-      drawCurve(curve, CURVE_THICKNESS, COLOR);
+      drawCurve(new FlxPoint(x, y), curve, CURVE_THICKNESS, COLOR);
     }
 
     override public function update() : void {
@@ -59,12 +59,12 @@ package {
       return -1.0 * Math.exp(-1.0 / 2.0 * (tMod - MEAN) * (tMod - MEAN) / VARIANCE);
     }
 
-    private function drawCurve(points : Array, thickness : Number = 1, color : uint = 0) : void {
+    private function drawCurve(start : FlxPoint, points : Array, thickness : Number = 1, color : uint = 0) : void {
       var curve : Shape = new Shape();
       curve.graphics.lineStyle(thickness, color);
-      curve.graphics.moveTo(x, y + points[0]);
+      curve.graphics.moveTo(start.x, start.y + points[0]);
       for (var i : int = 1; i < points.length; ++i) {
-        curve.graphics.lineTo(x + i, y + points[i]);
+        curve.graphics.lineTo(start.x + i, start.y + points[i]);
       }
       FlxG.camera.buffer.draw(curve);
     }
