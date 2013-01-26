@@ -21,6 +21,7 @@ package {
     private static var WAVE_FREQUENCY : Number = 8.0;
     private var whichColor:uint;
     private var curve : Array;
+    private var offsetIndex : int;
     private var gap : Array;
     private var gapIndex : int;
     private var newArray:Array;
@@ -33,16 +34,16 @@ package {
       for (var i : int = 0; i < FlxG.width; ++i) {
         curve[i] = 0.0;
       }
+      offsetIndex = 0;
       lastTime = getTime();
       gap = [];
-      gapIndex = Math.floor(Math.random() * (curve.length-20));
+      gapIndex = FlxG.width - 20;
     }
 
     override public function draw() : void {
       super.draw();
       drawCurve(new FlxPoint(x, y), curve, CURVE_THICKNESS, COLOR);
-      var c:uint = colorPicker();
-      drawCurve(new FlxPoint(gapIndex, y), gap, CURVE_THICKNESS+1, c);
+      drawCurve(new FlxPoint(mod(gapIndex - offsetIndex, FlxG.width), y), gap, CURVE_THICKNESS+1, 0x000000);
     }
 
     override public function update() : void {
@@ -55,6 +56,7 @@ package {
         for (var t : Number = lastTime; t < newTime; t += 1.0 / SAMPLES_PER_SECOND) {
           curve.push(f(t) * g(t));
         }
+        offsetIndex += newSamples;
         lastTime = newTime;
       }
       gap = curve.slice(gapIndex, gapIndex + 20);
@@ -90,11 +92,19 @@ package {
     private function drawCurve(start : FlxPoint, points : Array, thickness : Number = 1, color : uint = 0) : void {
       var curve : Shape = new Shape();
       curve.graphics.lineStyle(thickness, color);
-      curve.graphics.moveTo(start.x, start.y + points[0]);
+      curve.graphics.moveTo(start.x, start.y + points[mod(0 - offsetIndex, FlxG.width)]);
       for (var i : int = 1; i < points.length; ++i) {
-        curve.graphics.lineTo(start.x + i, start.y + points[i]);
+        curve.graphics.lineTo(start.x + i, start.y + points[mod(i - offsetIndex, FlxG.width)]);
       }
       FlxG.camera.buffer.draw(curve);
+    }
+
+    private function mod(value : int, modulus : int) : int {
+      var result : int = value % modulus;
+      while (result < 0.0) {
+        result += modulus;
+      }
+      return result;
     }
 
     private function getTime() : Number {
@@ -105,7 +115,7 @@ package {
       if (xCoordinate < 0 || xCoordinate >= FlxG.width) {
         return y;
       } else {
-        return y + curve[xCoordinate];
+        return y + curve[mod(xCoordinate - offsetIndex, FlxG.width)];
       }
     }
   }
