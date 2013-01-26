@@ -41,6 +41,10 @@ package {
       return WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * BEATS_PER_MINUTE / BPM_PER_HERTZ * t) + NOISE_AMPLITUDE * Math.random();
     }
 
+    private function g(t : Number) : Number {
+      return 0.0;
+    }
+
     private function drawCurve(points : Array, thickness : Number = 1, color : uint = 0) : void {
       var curve : Shape = new Shape();
       curve.graphics.lineStyle(thickness, color);
@@ -53,6 +57,14 @@ package {
 
     private function getTime() : Number {
       return new Date().getTime() / MILLISECONDS_PER_SECOND;
+    }
+
+    public function getYCoordinateAt(xCoordinate : int) : Number {
+      if (xCoordinate < 0 || xCoordinate >= FlxG.width) {
+        return y;
+      } else {
+        return y + curve[xCoordinate];
+      }
     }
   }
 }
