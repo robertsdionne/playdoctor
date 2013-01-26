@@ -6,6 +6,8 @@ package {
 
     private static var BEATS_PER_MINUTE : Number = 70.0;
     private static var BPM_PER_HERTZ : Number = 60.0;
+    private static var COLOR : uint = 0x00ff3c;
+    private static var CURVE_THICKNESS : Number = 3;
     private static var MILLISECONDS_PER_SECOND : Number = 1000.0;
     private static var NEW_SAMPLES : int = 10;
     private static var NOISE_AMPLITUDE : Number = 15.0;
@@ -29,10 +31,14 @@ package {
       var newTime : Number = getTime();
       curve = curve.slice(NEW_SAMPLES);
       for (var t : Number = lastTime; t < newTime; t += (newTime - lastTime) / NEW_SAMPLES) {
-        curve.push(WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * BEATS_PER_MINUTE / BPM_PER_HERTZ * t) + NOISE_AMPLITUDE * Math.random());
+        curve.push(f(t));
       }
-      drawCurve(curve, 3, 0xffffff);
+      drawCurve(curve, CURVE_THICKNESS, COLOR);
       lastTime = newTime;
+    }
+
+    private function f(t : Number) : Number {
+      return WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * BEATS_PER_MINUTE / BPM_PER_HERTZ * t) + NOISE_AMPLITUDE * Math.random();
     }
 
     private function drawCurve(points : Array, thickness : Number = 1, color : uint = 0) : void {
