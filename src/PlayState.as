@@ -4,6 +4,7 @@ package
     import flash.display.Bitmap;
     import flash.geom.Point;
     import flash.display.Shape;
+    import flash.geom.ColorTransform;
 
     public class PlayState extends FlxState {
 

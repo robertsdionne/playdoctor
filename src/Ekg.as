@@ -1,12 +1,14 @@
 package {
   import org.flixel.*;
   import flash.display.Shape;
+  import flash.geom.ColorTransform;
 
   public class Ekg extends FlxSprite {
 
     private static var BEATS_PER_MINUTE : Number = 70.0;
     private static var BPM_PER_HERTZ : Number = 60.0;
     private static var COLOR : uint = 0x00ff3c;
+    private static var COLORGAP : uint = 0x000000;
     private static var CURVE_THICKNESS : Number = 3;
     private static var FREQUENCY : Number = BEATS_PER_MINUTE / BPM_PER_HERTZ;
     private static var PERIOD : Number = 1.0 / FREQUENCY;
@@ -17,8 +19,9 @@ package {
     private static var VARIANCE : Number = 1.0 / (100.0 * FREQUENCY * FREQUENCY);
     private static var WAVE_AMPLITUDE : Number = 100.0;
     private static var WAVE_FREQUENCY : Number = 8.0;
-
+    private var whichColor:uint;
     private var curve : Array;
+    private var newArray:Array;
     private var lastTime : Number;
 
     public function Ekg(x : int = 0, y : int = 0) {
@@ -48,7 +51,35 @@ package {
         }
         lastTime = newTime;
       }
+      drawCurve(curve, CURVE_THICKNESS, COLOR);
+      var c:uint = colorPicker();
+      var r:Array = getRandomSlice(curve);
+      drawCurve(r, CURVE_THICKNESS, c)
+      lastTime = newTime;
     }
+
+    public function colorPicker() : uint {
+      whichColor = Math.random()*2;
+      if(whichColor > 1){
+        return 0x00ff3c;
+      } else {
+        return 0x000000;
+      }
+    }
+
+    public function getRandomSlice(thisArray:Array):Array {
+      var startIndex:int = Math.floor(Math.random()*(thisArray.length-20));
+      var endIndex:int = startIndex + 20;
+      var splitArray:Array = thisArray.slice(startIndex, endIndex)
+      trace(splitArray);
+      return splitArray;
+    }
+
+    /*override public function update():void{
+      var curveSlice:Object = getRandomSlice(curve);
+      var c:uint = colorPicker();
+      curveSlice.color(c);
+    }*/
 
     private function f(t : Number) : Number {
       return WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * WAVE_FREQUENCY * t) + NOISE_AMPLITUDE * Math.random();
