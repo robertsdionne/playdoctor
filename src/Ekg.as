@@ -21,6 +21,8 @@ package {
     private static var WAVE_FREQUENCY : Number = 8.0;
     private var whichColor:uint;
     private var curve : Array;
+    private var gap : Array;
+    private var gapIndex : int;
     private var newArray:Array;
     private var lastTime : Number;
 
@@ -32,11 +34,15 @@ package {
         curve[i] = 0.0;
       }
       lastTime = getTime();
+      gap = [];
+      gapIndex = Math.floor(Math.random() * (curve.length-20));
     }
 
     override public function draw() : void {
       super.draw();
       drawCurve(new FlxPoint(x, y), curve, CURVE_THICKNESS, COLOR);
+      var c:uint = colorPicker();
+      drawCurve(new FlxPoint(gapIndex, y), gap, CURVE_THICKNESS+1, c);
     }
 
     override public function update() : void {
@@ -51,10 +57,7 @@ package {
         }
         lastTime = newTime;
       }
-      drawCurve(curve, CURVE_THICKNESS, COLOR);
-      var c:uint = colorPicker();
-      var r:Array = getRandomSlice(curve);
-      drawCurve(r, CURVE_THICKNESS, c)
+      gap = curve.slice(gapIndex, gapIndex + 20);
       lastTime = newTime;
     }
 
@@ -74,12 +77,6 @@ package {
       trace(splitArray);
       return splitArray;
     }
-
-    /*override public function update():void{
-      var curveSlice:Object = getRandomSlice(curve);
-      var c:uint = colorPicker();
-      curveSlice.color(c);
-    }*/
 
     private function f(t : Number) : Number {
       return WAVE_AMPLITUDE * Math.cos(2.0 * Math.PI * WAVE_FREQUENCY * t) + NOISE_AMPLITUDE * Math.random();
