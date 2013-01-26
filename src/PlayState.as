@@ -20,7 +20,8 @@ package
             _player = new Player(200,200);
             this.add(_player);
 
-            ekg = new Ekg(0, FlxG.height / 2.0);
+            ekg = new Ekg(0, FlxG.height / 2.0,
+                70.0, 0x00ff3c, 3.0, 50.0, 512, 200, 100.0, 8.0);
             this.add(ekg);
 
             _hud = new HUD(ekg);

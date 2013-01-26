@@ -24,6 +24,7 @@ package {
     private var offsetIndex: int;
     private var period: Number;
     private var samplesPerSecond: Number;
+    private var screenWidth: int;
     private var variance: Number;
     private var waveAmplitude: Number;
     private var waveFrequency: Number;
@@ -36,6 +37,7 @@ package {
         curveThickness: Number = 3.0,
         noiseAmplitude: Number = 50.0,
         samplesPerSecond: int = 512,
+        screenWidth: int = 640,
         waveAmplitude: Number = 100.0,
         waveFrequency: Number = 8.0) {
       super(x, y);
@@ -45,6 +47,7 @@ package {
       this.curveThickness = curveThickness;
       this.noiseAmplitude = noiseAmplitude;
       this.samplesPerSecond = samplesPerSecond;
+      this.screenWidth = screenWidth;
       this.waveAmplitude = waveAmplitude;
       this.waveFrequency = waveFrequency;
       this.frequency = this.beatsPerMinute / BPM_PER_HERTZ;
@@ -52,7 +55,7 @@ package {
       this.mean = this.period / 2.0;
       this.variance = 1.0 / (100.0 * this.frequency * this.frequency);
       this.curve = [];
-      for (var i: int = 0; i < FlxG.width; ++i) {
+      for (var i: int = 0; i < screenWidth; ++i) {
         this.curve[i] = 0.0;
       }
       this.offsetIndex = 0;
@@ -92,9 +95,9 @@ package {
     private function drawCurve(start: FlxPoint, points: Array, thickness: Number = 1, color: uint = 0): void {
       var curve: Shape = new Shape();
       curve.graphics.lineStyle(thickness, color);
-      curve.graphics.moveTo(start.x, start.y + points[mod(0 - offsetIndex, FlxG.width)]);
+      curve.graphics.moveTo(start.x, start.y + points[mod(0 - offsetIndex, screenWidth)]);
       for (var i: int = 1; i < points.length; ++i) {
-        curve.graphics.lineTo(start.x + i, start.y + points[mod(i - offsetIndex, FlxG.width)]);
+        curve.graphics.lineTo(start.x + i, start.y + points[mod(i - offsetIndex, screenWidth)]);
       }
       FlxG.camera.buffer.draw(curve);
     }
@@ -112,10 +115,10 @@ package {
     }
 
     public function getYCoordinateAt(xCoordinate: int): Number {
-      if (xCoordinate < 0 || xCoordinate >= FlxG.width) {
+      if (xCoordinate < 0 || xCoordinate >= screenWidth) {
         return y;
       } else {
-        return y + curve[mod(xCoordinate - offsetIndex, FlxG.width)];
+        return y + curve[mod(xCoordinate - x - offsetIndex, screenWidth)];
       }
     }
   }
