@@ -12,6 +12,7 @@ package
         public static var _linePoints:FlxPoint;
         public static var _linePoints2:FlxPoint;
         public static var t:FlxText;
+        public static var _floor:Floor;
 
         override public function create():void{
 
@@ -24,19 +25,20 @@ package
             _line = new Lines(_linePoints, _linePoints2);
             this.add(_line);
 
+            _floor = new Floor(50,400);
+            this.add(_floor);
+
         }
 
         override public function update():void{
             super.update();
             borderCollide(_player);
+            FlxG.collide(_player, _floor, collisionCallback);
 
-            FlxG.collide(_line, _player, collisionCallback);
         }
 
-        public function collisionCallback(line:Shape, player:Player):void{
-            t = new FlxText(FlxG.width/2-50,FlxG.height-20,100,"click to play");
-            t.alignment = "center";
-            add(t);
+        public function collisionCallback(player:FlxObject, floor:Floor):void{
+
         }
 
         public function borderCollide(wallSprite:FlxSprite):void{

@@ -3,6 +3,8 @@ package{
 
     public class Player extends FlxSprite{
 
+        public static var gravity:int = -25;
+
         public function Player(x:int,y:int){
             super(x,y);
 
@@ -16,19 +18,24 @@ package{
 
         override public function update():void{
             super.update();
+            var _jumppower:int = 430;
+            var maxHeight:int = 30;
 
             acceleration.x = 0;
             acceleration.y = 0;
+
+            velocity.y -= gravity;
 
             if(FlxG.keys.LEFT) {
                 acceleration.x -= drag.x;
             } else if(FlxG.keys.RIGHT){
                 acceleration.x += drag.x;
-            } else if(FlxG.keys.UP){
-                acceleration.y -= drag.y;
-            } else if(FlxG.keys.DOWN){
-                acceleration.y += drag.y;
+            } else if(FlxG.keys.justPressed("UP")){
+                velocity.y = -_jumppower;
             }
         }
+            //} else if(FlxG.keys.DOWN){
+            //    acceleration.y += drag.y;
+            //}
     }
 }
