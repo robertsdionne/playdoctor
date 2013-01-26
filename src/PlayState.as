@@ -13,6 +13,8 @@ package
         public static var _linePoints2:FlxPoint;
         public static var t:FlxText;
         public static var _floor:Floor;
+        public var sprite:FlxSprite;
+        public var ekg:Ekg;
 
         override public function create():void{
 
@@ -25,8 +27,8 @@ package
             _line = new Lines(_linePoints, _linePoints2);
             this.add(_line);
 
-            var sprite : FlxSprite = new Ekg(0, FlxG.height / 2.0);
-            this.add(sprite);
+            ekg = new Ekg(0, FlxG.height / 2.0);
+            this.add(ekg);
 
             _floor = new Floor(50,400);
             this.add(_floor);
@@ -35,12 +37,21 @@ package
         override public function update():void{
             super.update();
             borderCollide(_player);
-            FlxG.collide(_player, _floor, collisionCallback);
+            //ekgCollide();
+            FlxG.collide(_player,_floor,floorCollide);
 
         }
 
-        public function collisionCallback(player:FlxObject, floor:Floor):void{
+        //public function ekgCollide():void{
+          //  var suddenPush:int = ekg.getYCoordinateAt(_player.x);
+            //if(ekg.getYCoordinateAt(_player.x)<_player.y){
+              //  _player.y =+ suddenPush - _player.height;
+                //_player.x + _player.width;
+            //}
+        //}
 
+        public function floorCollide(player:FlxObject, floor:Floor):void{
+            _player.upPressLimit = 4;
         }
 
         public function borderCollide(wallSprite:FlxSprite):void{

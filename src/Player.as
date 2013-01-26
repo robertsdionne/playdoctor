@@ -1,8 +1,12 @@
 package{
     import org.flixel.*;
+    import flash.display.Bitmap;
+    import flash.geom.Point;
+    import flash.display.Shape;
 
     public class Player extends FlxSprite{
 
+        public var upPressLimit:int = 4;
         public static var gravity:int = -25;
 
         public function Player(x:int,y:int){
@@ -20,6 +24,7 @@ package{
             super.update();
             var _jumppower:int = 430;
             var maxHeight:int = 30;
+            var playerOriginPoint:int = this.y;
 
             acceleration.x = 0;
             acceleration.y = 0;
@@ -31,11 +36,11 @@ package{
             } else if(FlxG.keys.RIGHT){
                 acceleration.x += drag.x;
             } else if(FlxG.keys.justPressed("UP")){
-                velocity.y = -_jumppower;
+                if(upPressLimit > 0){
+                    upPressLimit -= 1;
+                    velocity.y = -_jumppower;
+                }
             }
         }
-            //} else if(FlxG.keys.DOWN){
-            //    acceleration.y += drag.y;
-            //}
     }
 }
