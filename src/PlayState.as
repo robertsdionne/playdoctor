@@ -10,10 +10,12 @@ package
         public static var _hud: HUD;
         public static var t: FlxText;
         public var ekgs: Array;
+        public var gaps: Array;
         public var _gap: GapBox;
         public var suddenGapX: int;
         public var suddenGapY: int;
         public var gapTime: int;
+        public var vit:Array;
 
         override public function create(): void {
             _player = new Player(200,200);
@@ -26,6 +28,16 @@ package
                 ekgs.push(item);
 
                 this.add(item);
+            }
+
+            gaps = [];
+
+            gapForEachEKG();
+
+            vit = [];
+            for (var i: int = 0; i < 10; ++i) {
+                var vitPoints: Number = 220 - (10*_player.level)
+                vit.push(vitPoints);
             }
 
             _hud = new HUD(ekgs[0], _player);
@@ -46,6 +58,7 @@ package
             super.update();
             borderCollide(_player);
             ekgCollide();
+            hitLevelAbove();
 
             if (ekgs[_gap.level - 1]) {
                 suddenGapX = (ekgs[_gap.level - 1].ekgGap()) - _gap.width*0.5;
@@ -63,8 +76,16 @@ package
                 _player.level -= 1;
             }
 
-            if(_player.level == 0 && _player.y >= FlxG.height - _player.height){
+            if(_player.y >= FlxG.height - _player.height){
                 _player.kill();
+            }
+        }
+
+        public function gapForEachEKG():void{
+            var i:int = new int;
+            for (i=0;i<ekgs.length;i++){
+                _gap = new GapBox(suddenGapX,suddenGapY,i);
+                this.add(_gap);
             }
         }
 
@@ -92,7 +113,16 @@ package
             } else {
                 _player.level += 1;
             }
+        }
 
+        public function hitLevelAbove():void{
+            if (ekgs[_player.level]) {
+                var suddenPush: int = ekgs[_player.level].getYCoordinateAt(_player.x + _player.width / 2.0);
+                if (_player.y < suddenPush) {
+                    _player.y = suddenPush;
+                    _player.velocity.y = 0.0;
+                }
+            }
         }
 
         public function borderCollide(wallSprite: FlxSprite): void{
