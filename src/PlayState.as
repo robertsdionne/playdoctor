@@ -45,7 +45,7 @@ package
             super.update();
             borderCollide(_player);
             ekgCollide();
-            gapTrack();
+            //gapTrack();
 
             if (ekgs[_player.level - 1]) {
                 suddenGapX = Math.random()*640;
