@@ -45,7 +45,7 @@ package
                 _player.y = suddenPush - _player.height;
                 _player.velocity.y = 0.0;
                 _player.jumping = false;
-                _player.upPressLimit = 4;
+                _player.upPressLimit = 3;
             } else {
                 _player.jumping = true;
             }

@@ -7,6 +7,7 @@ package{
 		[Embed(source="../assets/sprites/monitor_readout.png")] private var ImgBackDrop:Class;
 		[Embed(source="../assets/sprites/heartImg.png")] private var ImgHeart:Class;
 		[Embed(source="../assets/sprites/reflection.png")] private var ImgReflect:Class;
+		[Embed(source="../assets/sprites/powerBar.png")] private var ImgPwrBar:Class;
 		
 		public var beating:Boolean = false;
 		public var backdrop:Boolean = false;
@@ -16,11 +17,14 @@ package{
 		public var vitality:Number = 200;
 		public var _vDisplay:FlxText = new FlxText(465,50,200,vitality.toString());
 		public var _heightDisplay:FlxText = new FlxText(40,FlxG.height - 40,100,"0");
+		public var _levelDisplay:FlxText = new FlxText(465,210,150,level.toString());
+		public var _ctrlsDisplay:FlxText = new FlxText(150,FlxG.height - 40,250,"KYBRD CTRLS: LFT RGHT SPCE")
+		public var _timeDisplay:FlxText = new FlxText(530,170,100,"0")
 		private var _p:Player;
 		public var level:Number = 1;
-		public var _levelDisplay:FlxText = new FlxText(485,200,150,level.toString());
-		public var _ctrlsDisplay:FlxText = new FlxText(150,FlxG.height - 40,250,"KYBRD CTRLS: LFT RGHT SPCE")
 		public var _reflection:FlxSprite = new FlxSprite;
+		private var _pwrBar:FlxSprite = new FlxSprite;
+		private var _timer:Number = 0;
 
 		
 		
@@ -32,6 +36,15 @@ package{
 			_backdrop.y=3;
 			_backdrop.flicker(0);
 			this.add(_backdrop);
+
+			_pwrBar.loadGraphic(ImgPwrBar,true,true,48,136,true)
+			_pwrBar.x = 575;
+			_pwrBar.y = 330;
+			_pwrBar.addAnimation("4",[0]);
+			_pwrBar.addAnimation("3",[1]);
+			_pwrBar.addAnimation("2",[2]);
+			_pwrBar.addAnimation("1",[3]);
+			this.add(_pwrBar);
 			
 			_heart.loadGraphic(ImgHeart,true,true,27,21,true);
 			_heart.x = 580;
@@ -51,6 +64,11 @@ package{
 			_levelDisplay.size = 72;
 			this.add(_levelDisplay);
 
+			_timeDisplay.color = 0xaeff00;
+			_timeDisplay.size = 12;
+			_timeDisplay.alignment = "right";
+			this.add(_timeDisplay);
+
 			_ctrlsDisplay.color = 0xaeff00;
 			_ctrlsDisplay.size = 12;
 			this.add(_ctrlsDisplay);
@@ -67,6 +85,16 @@ package{
 			super.update();
 			_vDisplay.text = vitality.toString();
 			_heightDisplay.text = (int((_p.y * 4.234)*10000)/10000).toString();
+			_timer += FlxG.elapsed;
+			_timeDisplay.text = int(_timer).toString();
+
+			if (_p.upPressLimit > 0){
+				_pwrBar.visible = true;
+				_pwrBar.play(_p.upPressLimit.toString());
+			}
+			else{
+				_pwrBar.visible = false;
+			}
 		}
 	}
 }
