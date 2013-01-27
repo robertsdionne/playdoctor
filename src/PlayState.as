@@ -6,6 +6,8 @@ package
 
     public class PlayState extends FlxState {
 
+        [Embed(source="../assets/sounds/beep.mp3")] private var beepSound:Class;
+
         public static var _player: Player;
         public static var _hud: HUD;
         public static var t: FlxText;
@@ -39,6 +41,8 @@ package
 
             _hud = new HUD(ekgs[0], _player);
             this.add(_hud);
+
+            FlxG.playMusic(beepSound);
         }
 
         private function makeColor(red: Number, green: Number, blue: Number): uint {
@@ -123,7 +127,7 @@ package
         }
 
         public function borderCollide(wallSprite: FlxSprite): void{
-            if (wallSprite.x >= FlxG.width - wallSprite.width) {
+            if (wallSprite.x >= 420 - wallSprite.width) {
                 wallSprite.x = FlxG.width - wallSprite.width;
             }
             if (wallSprite.x <= 0) {
