@@ -20,14 +20,27 @@ package
             this.add(_player);
 
             ekg = new Ekg(0, FlxG.height / 2.0,
-                70.0, 0x00ff3c, 3.0, 50.0, 512, 420, 100.0, 8.0);
+                70.0, 0x00ff3c, 3.0, 50.0, 600, 420, 100.0, 8.0);
             this.add(ekg);
+
+            for (var i: int = 1; i < 2; ++i) {
+                var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
+                    70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 600, 420, 100.0, 8.0 + 8.0 * i);
+                this.add(item);
+            }
 
             _hud = new HUD(ekg,_player);
             this.add(_hud);
 
             _gap = new GapBox(suddenGapX,suddenGapY);
             this.add(_gap);
+        }
+
+        private function makeColor(red: Number, green: Number, blue: Number): uint {
+            var r : uint = uint(red * 255);
+            var g : uint = uint(green * 255);
+            var b : uint = uint(blue * 255);
+            return ((r << 16) | (g << 8) | b);
         }
 
         override public function update(): void{
