@@ -73,14 +73,11 @@ package {
       var dt: Number = newTime - lastTime;
       if (dt > 0.0) {
         var newSamples: int = dt * samplesPerSecond;
-        curve = curve.slice(newSamples);
         for (var t: Number = lastTime; t < newTime; t += 1.0 / samplesPerSecond) {
-          curve.push(f(t) * g(t));
+          curve[offsetIndex++ % curve.length] = f(t) * g(t);
         }
-        offsetIndex += newSamples;
         lastTime = newTime;
       }
-      lastTime = newTime;
     }
 
     private function f(t: Number): Number {
@@ -95,19 +92,11 @@ package {
     private function drawCurve(start: FlxPoint, points: Array, thickness: Number = 1, color: uint = 0): void {
       var curve: Shape = new Shape();
       curve.graphics.lineStyle(thickness, color);
-      curve.graphics.moveTo(start.x, start.y + points[mod(0 - offsetIndex, screenWidth)]);
+      curve.graphics.moveTo(start.x, start.y + points[0]);
       for (var i: int = 1; i < points.length; ++i) {
-        curve.graphics.lineTo(start.x + i, start.y + points[mod(i - offsetIndex, screenWidth)]);
+        curve.graphics.lineTo(start.x + i, start.y + points[i]);
       }
       FlxG.camera.buffer.draw(curve);
-    }
-
-    private function mod(value: int, modulus: int): int {
-      var result : int = value % modulus;
-      while (result < 0.0) {
-        result += modulus;
-      }
-      return result;
     }
 
     private function getTime(): Number {
@@ -118,7 +107,7 @@ package {
       if (xCoordinate < 0 || xCoordinate >= screenWidth) {
         return y;
       } else {
-        return y + curve[mod(xCoordinate - x - offsetIndex, screenWidth)];
+        return y + curve[xCoordinate - x];
       }
     }
   }
