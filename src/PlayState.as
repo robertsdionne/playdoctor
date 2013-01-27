@@ -85,6 +85,8 @@ package
 
             if(_player.y >= FlxG.height - _player.height){
                 _player.kill();
+                this.kill();
+                FlxG.switchState(new GameOver());
             }
         }
 
