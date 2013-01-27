@@ -6,24 +6,36 @@ package
 
     public class PlayState extends FlxState {
 
+        [Embed(source="../assets/sounds/beep.mp3")] private var beepSound:Class;
         public static var _player: Player;
         public static var _hud: HUD;
         public static var t: FlxText;
         public var ekgs: Array;
         public var gaps: Array;
+        public var masks: Array;
+        public var _colArray:Array;
+        public var currentColor:int;
         public var suddenGapX: int;
         public var suddenGapY: int;
         public var gapTime: int;
         public var vit:Array;
+        public var _gapDisplayGrp:FlxGroup = new FlxGroup;
 
         override public function create(): void {
             _player = new Player(200,200);
-            this.add(_player);
+
+            _colArray = [];
+            _colArray.push(0x00ff3c);
+            _colArray.push(0x17eaf3);
+            _colArray.push(0xff7800);
+            _colArray.push(0xaeff00);
+            _colArray.push(0xd235ff);
+            currentColor = 0;
 
             ekgs = [];
             for (var i: int = 0; i < 100; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    220 - (2 * i), makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, i + 1, 50.0, _player, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
+                    220 - (2 * i), makeColor(), 3.0 - 2.0 * i,i + 1, 50.0, _player, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
 
                 this.add(item);
@@ -37,15 +49,16 @@ package
                 vit.push(vitPoints);
             }
 
+
+            this.add(_gapDisplayGrp)
+            this.add(_player);
+
             _hud = new HUD(ekgs[0], _player, vit);
             this.add(_hud);
         }
 
-        private function makeColor(red: Number, green: Number, blue: Number): uint {
-            var r : uint = uint(red * 255);
-            var g : uint = uint(green * 255);
-            var b : uint = uint(blue * 255);
-            return ((r << 16) | (g << 8) | b);
+        private function makeColor(): uint {
+            return _colArray[currentColor++ % 5];
         }
 
         override public function update(): void{
@@ -83,6 +96,10 @@ package
                     gap.x = suddenGapX;
                     gap.y = suddenGapY;
                 }
+
+                masks[i].x = gap.x;
+                masks[i].y = (ekgs[gap.level-1].y) - 100;
+
                 FlxG.overlap(_player, gap, gapOverlap);
             }
 
@@ -95,15 +112,22 @@ package
 
             if(_player.y >= FlxG.height - _player.height){
                 _player.kill();
+                this.kill();
+                FlxG.switchState(new GameOver());
             }
         }
 
         public function gapForEachEKG(): void{
             gaps = [];
+            masks = [];
             for (var i: int = 0; i < ekgs.length; ++i){
-                var gap: GapBox = new GapBox(300 + 30 * i, 200, i + 1)
+                var gap: GapBox = new GapBox(300 + 30 * i, 200, i + 1);
                 gaps.push(gap);
-                this.add(gap);
+                _gapDisplayGrp.add(gap);
+
+                var mask: GapMask = new GapMask();
+                masks.push(mask);
+                _gapDisplayGrp.add(mask);
             }
         }
 
