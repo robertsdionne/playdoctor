@@ -18,6 +18,7 @@ package {
     private var curveColor: uint;
     private var curveThickness: Number;
     private var lastTime: Number;
+    private var nextBeatTime: Number;
     private var noiseAmplitude: Number;
     private var offsetIndex: int;
     private var samplesPerSecond: Number;
@@ -52,6 +53,7 @@ package {
       }
       this.offsetIndex = 0;
       this.lastTime = getTime();
+      this.nextBeatTime = getTime() + mean();
     }
 
     private function frequency(): Number {
@@ -71,7 +73,9 @@ package {
     }
 
     public function setVitality(vitality: Number): void {
-      this.beatsPerMinute = vitality;
+      beatsPerMinute = vitality > 0.0 ? vitality : 0.0;
+      waveFrequency = beatsPerMinute / 10.0;
+      waveAmplitude = beatsPerMinute / 3.0 + 50.0;
     }
 
     override public function draw(): void {
@@ -90,14 +94,17 @@ package {
         }
         lastTime = newTime;
       }
+      if (newTime > nextBeatTime) {
+        nextBeatTime += period();
+      }
     }
 
     private function f(t: Number): Number {
-      return waveAmplitude * Math.cos(2.0 * Math.PI * waveFrequency * t) + noiseAmplitude * Math.random();
+      return waveAmplitude * Math.cos(2.0 * Math.PI * waveFrequency * (nextBeatTime - t)) + noiseAmplitude * Math.random();
     }
 
     private function g(t: Number): Number {
-      var tMod: Number = t % period();
+      var tMod: Number = nextBeatTime - t;
       return -1.0 * Math.exp(-1.0 / 2.0 * (tMod - mean()) * (tMod - mean()) / variance());
     }
 

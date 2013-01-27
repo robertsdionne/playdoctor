@@ -25,7 +25,7 @@ package
             ekgs = [];
             for (var i: int = 0; i < 100; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
+                    220 - (2 * i), makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
 
                 this.add(item);
@@ -58,9 +58,14 @@ package
             ekgCollide();
             hitLevelAbove();
 
-            vit[_player.level-1]-=0.1;
-            if (vit[_player.level-1] < 0.0) {
-                _player.kill();
+            if (ekgs[_player.level-1]) {
+                if (vit[_player.level-1] > 0.1) {
+                    vit[_player.level-1]-=0.1;
+                    ekgs[_player.level-1].setVitality(vit[_player.level-1]);
+                }
+                if (vit[_player.level-1] <= 0.0) {
+                    _player.kill();
+                }
             }
 
             for (var i: int = 0; i < gaps.length; ++i) {
