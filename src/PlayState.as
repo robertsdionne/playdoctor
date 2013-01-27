@@ -45,11 +45,14 @@ package
             super.update();
             borderCollide(_player);
             ekgCollide();
+            gapTrack();
 
             if (ekgs[_player.level - 1]) {
                 suddenGapX = Math.random()*640;
-                suddenGapY = ekgs[_player.level - 1].getYCoordinateAt(suddenGapX);
+                suddenGapY = ekgs[_player.level - 1].getYCoordinateAt(suddenGapX)-5;
             }
+
+            FlxG.overlap(_player, _gap, gapOverlap);
 
             if (FlxG.keys.justPressed("Q") && _player.level < 100) {
                 _player.level += 1;
@@ -84,6 +87,10 @@ package
             _player.upPressLimit = 4;
         }
 
+        public function gapOverlap(player: FlxObject, gap:GapBox): void {
+            _player.velocity.y =+ 430;
+        }
+
         public function borderCollide(wallSprite: FlxSprite): void{
             if (wallSprite.x >= FlxG.width - wallSprite.width) {
                 wallSprite.x = FlxG.width - wallSprite.width;
@@ -100,3 +107,4 @@ package
         }
     }
 }
+
