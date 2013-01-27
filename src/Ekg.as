@@ -17,13 +17,19 @@ package {
     private var curve: Array;
     private var curveColor: uint;
     private var curveThickness: Number;
+    private var flatlined: Boolean;
     private var lastTime: Number;
+    private var level: int;
+    private var nextBeatTime: Number;
     private var noiseAmplitude: Number;
     private var offsetIndex: int;
+    private var player: Player;
     private var samplesPerSecond: Number;
     private var screenWidth: int;
     private var waveAmplitude: Number;
     private var waveFrequency: Number;
+    [Embed(source="../assets/sounds/beep.mp3")] private var beepSound: Class;
+    [Embed(source="../assets/sounds/beep_dead.mp3")] private var beepDeadSound: Class;
 
     public function Ekg(
         x: int = 0,
@@ -31,7 +37,9 @@ package {
         beatsPerMinute: Number = 70.0,
         curveColor: int = 0x00ff3c,
         curveThickness: Number = 3.0,
+        level: int = 1,
         noiseAmplitude: Number = 50.0,
+        player: Player = null,
         samplesPerSecond: int = 512,
         screenWidth: int = 640,
         waveAmplitude: Number = 100.0,
@@ -41,7 +49,10 @@ package {
       this.beatsPerMinute = beatsPerMinute;
       this.curveColor = curveColor;
       this.curveThickness = curveThickness;
+      this.flatlined = false;
+      this.level = level;
       this.noiseAmplitude = noiseAmplitude;
+      this.player = player;
       this.samplesPerSecond = samplesPerSecond;
       this.screenWidth = screenWidth;
       this.waveAmplitude = waveAmplitude;
@@ -52,6 +63,7 @@ package {
       }
       this.offsetIndex = 0;
       this.lastTime = getTime();
+      this.nextBeatTime = getTime() + mean();
     }
 
     private function frequency(): Number {
@@ -71,7 +83,14 @@ package {
     }
 
     public function setVitality(vitality: Number): void {
-      this.beatsPerMinute = vitality;
+      beatsPerMinute = vitality > 0.0 ? vitality : 0.1;
+      waveFrequency = beatsPerMinute / 10.0;
+      waveAmplitude = beatsPerMinute / 3.0 + 50.0;
+      if (vitality <= 0.0 && !flatlined) {
+        FlxG.play(beepDeadSound);
+        player.kill();
+        flatlined = true;
+      }
     }
 
     override public function draw(): void {
@@ -90,14 +109,20 @@ package {
         }
         lastTime = newTime;
       }
+      if (newTime > nextBeatTime) {
+        nextBeatTime += period();
+        if (level == player.level) {
+          FlxG.play(beepSound);
+        }
+      }
     }
 
     private function f(t: Number): Number {
-      return waveAmplitude * Math.cos(2.0 * Math.PI * waveFrequency * t) + noiseAmplitude * Math.random();
+      return waveAmplitude * Math.cos(2.0 * Math.PI * waveFrequency * (nextBeatTime - t)) + noiseAmplitude * Math.random();
     }
 
     private function g(t: Number): Number {
-      var tMod: Number = t % period();
+      var tMod: Number = nextBeatTime - t;
       return -1.0 * Math.exp(-1.0 / 2.0 * (tMod - mean()) * (tMod - mean()) / variance());
     }
 

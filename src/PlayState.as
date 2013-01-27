@@ -7,8 +7,6 @@ package
     public class PlayState extends FlxState {
 
         [Embed(source="../assets/sounds/beep.mp3")] private var beepSound:Class;
-        //[Embed(source="../assets/sounds/click.mp3")] private var clickSound:Class;
-
         public static var _player: Player;
         public static var _hud: HUD;
         public static var t: FlxText;
@@ -35,9 +33,9 @@ package
             currentColor = 0;
 
             ekgs = [];
-            for (var i: int = 0; i < 2; ++i) {
+            for (var i: int = 0; i < 100; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    70.0 + 150.0 * i, makeColor(), 3.0 - 2.0 * i, 50.0, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
+                    220 - (2 * i), makeColor(), 3.0 - 2.0 * i,i + 1, 50.0, _player, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
 
                 this.add(item);
@@ -46,8 +44,8 @@ package
             gapForEachEKG();
 
             vit = [];
-            for (var j: int = 0; j < 10; ++j) {
-                var vitPoints: Number = 220 - (10*_player.level);
+            for (var j: int = 0; j < ekgs.length; ++j) {
+                var vitPoints: Number = 220 - (2 * j);
                 vit.push(vitPoints);
             }
 
@@ -57,8 +55,6 @@ package
 
             _hud = new HUD(ekgs[0], _player, vit);
             this.add(_hud);
-
-            FlxG.playMusic(beepSound);
         }
 
         private function makeColor(): uint {
@@ -71,7 +67,16 @@ package
             ekgCollide();
             hitLevelAbove();
 
-            vit[_player.level-1]-=0.1;
+            if (ekgs[_player.level-1]) {
+                vit[_player.level-1] -= 0.1;
+                if (vit[_player.level-1] < 0.0) {
+                    vit[_player.level-1] = 0.0;
+                }
+                ekgs[_player.level-1].setVitality(vit[_player.level-1]);
+                if (vit[_player.level-1] <= 0.0) {
+                    _player.kill();
+                }
+            }
 
             for (var i: int = 0; i < gaps.length; ++i) {
                 var gap: GapBox = gaps[i];
@@ -97,6 +102,8 @@ package
 
             if(_player.y >= FlxG.height - _player.height){
                 _player.kill();
+                this.kill();
+                FlxG.switchState(new GameOver());
             }
         }
 
@@ -133,10 +140,13 @@ package
         }
 
         public function gapOverlap(player: FlxObject, gap: GapBox): void {
-            if(gap.level == _player.level){
-                _player.level -= 1;
-            } else {
-                _player.level += 1;
+            if (gap.mayCollide()) {
+                if(gap.level == _player.level){
+                    _player.level -= 1;
+                } else {
+                    _player.level += 1;
+                }
+                gap.collide();
             }
         }
 
