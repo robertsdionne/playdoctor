@@ -18,13 +18,16 @@ package {
     private var curveColor: uint;
     private var curveThickness: Number;
     private var lastTime: Number;
+    private var level: int;
     private var nextBeatTime: Number;
     private var noiseAmplitude: Number;
     private var offsetIndex: int;
+    private var player: Player;
     private var samplesPerSecond: Number;
     private var screenWidth: int;
     private var waveAmplitude: Number;
     private var waveFrequency: Number;
+    [Embed(source="../assets/sounds/beep.mp3")] private var beepSound: Class;
 
     public function Ekg(
         x: int = 0,
@@ -32,7 +35,9 @@ package {
         beatsPerMinute: Number = 70.0,
         curveColor: int = 0x00ff3c,
         curveThickness: Number = 3.0,
+        level: int = 1,
         noiseAmplitude: Number = 50.0,
+        player: Player = null,
         samplesPerSecond: int = 512,
         screenWidth: int = 640,
         waveAmplitude: Number = 100.0,
@@ -42,7 +47,9 @@ package {
       this.beatsPerMinute = beatsPerMinute;
       this.curveColor = curveColor;
       this.curveThickness = curveThickness;
+      this.level = level;
       this.noiseAmplitude = noiseAmplitude;
+      this.player = player;
       this.samplesPerSecond = samplesPerSecond;
       this.screenWidth = screenWidth;
       this.waveAmplitude = waveAmplitude;
@@ -96,6 +103,9 @@ package {
       }
       if (newTime > nextBeatTime) {
         nextBeatTime += period();
+        if (level == player.level) {
+          FlxG.play(beepSound);
+        }
       }
     }
 

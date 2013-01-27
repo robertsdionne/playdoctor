@@ -6,8 +6,6 @@ package
 
     public class PlayState extends FlxState {
 
-        [Embed(source="../assets/sounds/beep.mp3")] private var beepSound:Class;
-
         public static var _player: Player;
         public static var _hud: HUD;
         public static var t: FlxText;
@@ -25,7 +23,7 @@ package
             ekgs = [];
             for (var i: int = 0; i < 100; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    220 - (2 * i), makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
+                    220 - (2 * i), makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, i + 1, 50.0, _player, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
 
                 this.add(item);
@@ -41,8 +39,6 @@ package
 
             _hud = new HUD(ekgs[0], _player, vit);
             this.add(_hud);
-
-            FlxG.playMusic(beepSound);
         }
 
         private function makeColor(red: Number, green: Number, blue: Number): uint {
