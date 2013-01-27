@@ -14,6 +14,10 @@ package
         public static var _floor:Floor;
         public var sprite:FlxSprite;
         public var ekg:Ekg;
+        public var _gap:GapBox;
+        public var suddenGapX:int;
+        public var suddenGapY:int;
+        public var gapTime:int;
 
         override public function create():void{
 
@@ -26,8 +30,9 @@ package
             _hud = new HUD(ekg);
             this.add(_hud);
 
-            _floor = new Floor(50,400);
-            //this.add(_floor);
+            _gap = new GapBox(suddenGapX,suddenGapY);
+            this.add(_gap);
+
         }
 
         override public function update():void{
@@ -35,6 +40,9 @@ package
             borderCollide(_player);
             ekgCollide();
             FlxG.collide(_player,_floor,floorCollide);
+
+            suddenGapX = Math.random()*640;
+            suddenGapY = ekg.getYCoordinateAt(suddenGapX);
 
         }
 
@@ -47,6 +55,13 @@ package
                 _player.upPressLimit = 4;
             }else{
                 _player.jumping = false;
+            }
+
+            var suddenPushGap : int = ekg.getYCoordinateAt(_gap.x + _gap.width);
+            if(_gap.y + _gap.height > suddenPushGap){
+                _gap.y = suddenPushGap - 0.5;
+                _gap.velocity.y =+ 430;
+                _gap.x++;
             }
         }
 

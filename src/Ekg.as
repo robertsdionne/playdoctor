@@ -63,14 +63,14 @@ package {
       lastTime = newTime;
     }
 
-    public function colorPicker() : uint {
+    /*public function colorPicker() : uint {
       whichColor = Math.random()*2;
       if(whichColor > 1){
         return 0x00ff3c;
       } else {
         return 0x000000;
       }
-    }
+    }*/
 
     public function getRandomSlice(thisArray:Array):Array {
       var startIndex:int = Math.floor(Math.random()*(thisArray.length-20));
