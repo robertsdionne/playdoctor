@@ -48,8 +48,8 @@ package
             ekgCollide();
 
             if (ekgs[_player.level - 1]) {
-                suddenGapX = Math.random()*640;
-                suddenGapY = ekgs[_player.level - 1].getYCoordinateAt(suddenGapX)-5;
+                suddenGapX = (ekgs[_player.level - 1].ekgGap()) - _gap.width*0.5;
+                suddenGapY = (ekgs[_player.level - 1].getYCoordinateAt(suddenGapX)) - _gap.width*0.5;
                 _gap.x = suddenGapX;
                 _gap.y = suddenGapY;
             }
