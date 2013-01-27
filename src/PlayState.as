@@ -34,10 +34,14 @@ package
             super.update();
             borderCollide(_player);
             ekgCollide();
+            gapTrack();
 
             suddenGapX = Math.random()*640;
-            suddenGapY = ekg.getYCoordinateAt(suddenGapX);
-        }
+            suddenGapY = ekg.getYCoordinateAt(suddenGapX)-5;
+
+            FlxG.overlap(_player, _gap, gapOverlap);
+
+            }
 
         public function ekgCollide(): void {
             var suddenPush: int = ekg.getYCoordinateAt(_player.x + _player.width / 2.0);
@@ -46,10 +50,11 @@ package
                 _player.velocity.y = 0.0;
                 _player.jumping = false;
                 _player.upPressLimit = 4;
-            } else {
-                _player.jumping = true;
+            } else {_player.jumping = true;
             }
+        }
 
+        public function gapTrack():void{
             var suddenPushGap : int = ekg.getYCoordinateAt(_gap.x + _gap.width);
             if(_gap.y + _gap.height > suddenPushGap){
                 _gap.y = suddenPushGap - 0.5;
@@ -60,6 +65,10 @@ package
 
         public function floorCollide(player: FlxObject, floor: Floor): void {
             _player.upPressLimit = 4;
+        }
+
+        public function gapOverlap(player: FlxObject, gap:GapBox): void {
+            _player.velocity.y =+ 430;
         }
 
         public function borderCollide(wallSprite: FlxSprite): void{
@@ -78,3 +87,4 @@ package
         }
     }
 }
+
