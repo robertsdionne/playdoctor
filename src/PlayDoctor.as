@@ -6,8 +6,8 @@ package
 
     public class PlayDoctor extends FlxGame {
 
-        public function PlayDoctor(){
-            super(640,480,MenuState,1);
+        public function PlayDoctor() {
+            super(640, 480, MenuState, 1);
         }
     }
 }
