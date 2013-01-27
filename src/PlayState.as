@@ -22,8 +22,9 @@ package
             ekgs = [];
             for (var i: int = 0; i < 2; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 600, 420, 100.0, 8.0 + 8.0 * i);
+                    70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 100, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
+
                 this.add(item);
             }
 
@@ -45,11 +46,12 @@ package
             super.update();
             borderCollide(_player);
             ekgCollide();
-            //gapTrack();
 
             if (ekgs[_player.level - 1]) {
                 suddenGapX = Math.random()*640;
                 suddenGapY = ekgs[_player.level - 1].getYCoordinateAt(suddenGapX)-5;
+                _gap.x = suddenGapX;
+                _gap.y = suddenGapY;
             }
 
             FlxG.overlap(_player, _gap, gapOverlap);

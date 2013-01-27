@@ -110,5 +110,9 @@ package {
         return y + curve[xCoordinate - x];
       }
     }
+
+    public function ekgGap(): Number {
+      return offsetIndex % screenWidth;
+    }
   }
 }
