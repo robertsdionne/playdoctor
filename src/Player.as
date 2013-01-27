@@ -11,6 +11,7 @@
         public var upPressLimit:int = 3;
         public static var gravity:int = -25;
 		public var jumping:Boolean = false;
+        public var level: int = 1;
 
         public function Player(x:int,y:int){
             super(x,y);

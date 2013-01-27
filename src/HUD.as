@@ -17,16 +17,13 @@ package{
 		public var vitality:Number = 200;
 		public var _vDisplay:FlxText = new FlxText(465,50,200,vitality.toString());
 		public var _heightDisplay:FlxText = new FlxText(40,FlxG.height - 40,100,"0");
-		public var _levelDisplay:FlxText = new FlxText(465,210,150,level.toString());
+		public var _levelDisplay:FlxText = new FlxText(465,210,150,"1");
 		public var _ctrlsDisplay:FlxText = new FlxText(150,FlxG.height - 40,250,"KYBRD CTRLS: LFT RGHT SPCE")
 		public var _timeDisplay:FlxText = new FlxText(530,170,100,"0")
 		private var _p:Player;
-		public var level:Number = 1;
 		public var _reflection:FlxSprite = new FlxSprite;
 		private var _pwrBar:FlxSprite = new FlxSprite;
 		private var _timer:Number = 0;
-
-		
 		
 		public function HUD(ekg:Ekg, _player:Player){
 			super();
@@ -87,6 +84,7 @@ package{
 			_heightDisplay.text = (int((_p.y * 4.234)*10000)/10000).toString();
 			_timer += FlxG.elapsed;
 			_timeDisplay.text = int(_timer).toString();
+			_levelDisplay.text = _p.level.toString();
 
 			if (_p.upPressLimit > 0){
 				_pwrBar.visible = true;

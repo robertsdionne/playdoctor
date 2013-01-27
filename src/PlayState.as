@@ -9,7 +9,7 @@ package
         public static var _player: Player;
         public static var _hud: HUD;
         public static var t: FlxText;
-        public var ekg: Ekg;
+        public var ekgs: Array;
         public var _gap: GapBox;
         public var suddenGapX: int;
         public var suddenGapY: int;
@@ -19,17 +19,15 @@ package
             _player = new Player(200,200);
             this.add(_player);
 
-            ekg = new Ekg(0, FlxG.height / 2.0,
-                70.0, 0x00ff3c, 3.0, 50.0, 600, 420, 100.0, 8.0);
-            this.add(ekg);
-
-            for (var i: int = 1; i < 2; ++i) {
+            ekgs = [];
+            for (var i: int = 0; i < 2; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
                     70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 600, 420, 100.0, 8.0 + 8.0 * i);
+                ekgs.push(item);
                 this.add(item);
             }
 
-            _hud = new HUD(ekg,_player);
+            _hud = new HUD(ekgs[0], _player);
             this.add(_hud);
 
             _gap = new GapBox(suddenGapX,suddenGapY);
@@ -48,26 +46,37 @@ package
             borderCollide(_player);
             ekgCollide();
 
-            suddenGapX = Math.random()*640;
-            suddenGapY = ekg.getYCoordinateAt(suddenGapX);
+            if (ekgs[_player.level - 1]) {
+                suddenGapX = Math.random()*640;
+                suddenGapY = ekgs[_player.level - 1].getYCoordinateAt(suddenGapX);
+            }
+
+            if (FlxG.keys.justPressed("Q") && _player.level < 100) {
+                _player.level += 1;
+            }
+            if (FlxG.keys.justPressed("Z") && _player.level > 0) {
+                _player.level -= 1;
+            }
         }
 
         public function ekgCollide(): void {
-            var suddenPush: int = ekg.getYCoordinateAt(_player.x + _player.width / 2.0);
-            if (_player.y + _player.height > suddenPush) {
-                _player.y = suddenPush - _player.height;
-                _player.velocity.y = 0.0;
-                _player.jumping = false;
-                _player.upPressLimit = 3;
-            } else {
-                _player.jumping = true;
-            }
+            if (ekgs[_player.level - 1]) {
+                var suddenPush: int = ekgs[_player.level - 1].getYCoordinateAt(_player.x + _player.width / 2.0);
+                if (_player.y + _player.height > suddenPush) {
+                    _player.y = suddenPush - _player.height;
+                    _player.velocity.y = 0.0;
+                    _player.jumping = false;
+                    _player.upPressLimit = 3;
+                } else {
+                    _player.jumping = true;
+                }
 
-            var suddenPushGap : int = ekg.getYCoordinateAt(_gap.x + _gap.width);
-            if(_gap.y + _gap.height > suddenPushGap){
-                _gap.y = suddenPushGap - 0.5;
-                _gap.velocity.y =+ 430;
-                _gap.x++;
+                var suddenPushGap : int = ekgs[_player.level - 1].getYCoordinateAt(_gap.x + _gap.width);
+                if(_gap.y + _gap.height > suddenPushGap){
+                    _gap.y = suddenPushGap - 0.5;
+                    _gap.velocity.y =+ 430;
+                    _gap.x++;
+                }
             }
         }
 
