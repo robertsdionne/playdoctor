@@ -17,6 +17,7 @@ package {
     private var curve: Array;
     private var curveColor: uint;
     private var curveThickness: Number;
+    private var flatlined: Boolean;
     private var lastTime: Number;
     private var level: int;
     private var nextBeatTime: Number;
@@ -28,6 +29,7 @@ package {
     private var waveAmplitude: Number;
     private var waveFrequency: Number;
     [Embed(source="../assets/sounds/beep.mp3")] private var beepSound: Class;
+    [Embed(source="../assets/sounds/beep_dead.mp3")] private var beepDeadSound: Class;
 
     public function Ekg(
         x: int = 0,
@@ -47,6 +49,7 @@ package {
       this.beatsPerMinute = beatsPerMinute;
       this.curveColor = curveColor;
       this.curveThickness = curveThickness;
+      this.flatlined = false;
       this.level = level;
       this.noiseAmplitude = noiseAmplitude;
       this.player = player;
@@ -80,9 +83,14 @@ package {
     }
 
     public function setVitality(vitality: Number): void {
-      beatsPerMinute = vitality > 0.0 ? vitality : 0.0;
+      beatsPerMinute = vitality > 0.0 ? vitality : 0.1;
       waveFrequency = beatsPerMinute / 10.0;
       waveAmplitude = beatsPerMinute / 3.0 + 50.0;
+      if (vitality <= 0.0 && !flatlined) {
+        FlxG.play(beepDeadSound);
+        player.kill();
+        flatlined = true;
+      }
     }
 
     override public function draw(): void {

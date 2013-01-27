@@ -55,10 +55,11 @@ package
             hitLevelAbove();
 
             if (ekgs[_player.level-1]) {
-                if (vit[_player.level-1] > 0.1) {
-                    vit[_player.level-1]-=0.1;
-                    ekgs[_player.level-1].setVitality(vit[_player.level-1]);
+                vit[_player.level-1] -= 0.1;
+                if (vit[_player.level-1] < 0.0) {
+                    vit[_player.level-1] = 0.0;
                 }
+                ekgs[_player.level-1].setVitality(vit[_player.level-1]);
                 if (vit[_player.level-1] <= 0.0) {
                     _player.kill();
                 }
