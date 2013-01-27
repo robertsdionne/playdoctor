@@ -35,12 +35,12 @@ package
             gapForEachEKG();
 
             vit = [];
-            for (var i: int = 0; i < 10; ++i) {
-                var vitPoints: Number = 220 - (10*_player.level)
+            for (var j: int = 0; j < 10; ++j) {
+                var vitPoints: Number = 220 - (10*_player.level);
                 vit.push(vitPoints);
             }
 
-            _hud = new HUD(ekgs[0], _player);
+            _hud = new HUD(ekgs[0], _player, vit);
             this.add(_hud);
 
             _gap = new GapBox(suddenGapX,suddenGapY,1);
@@ -59,6 +59,8 @@ package
             borderCollide(_player);
             ekgCollide();
             hitLevelAbove();
+
+            vit[_player.level-1]-=0.1;
 
             if (ekgs[_gap.level - 1]) {
                 suddenGapX = (ekgs[_gap.level - 1].ekgGap()) - _gap.width*0.5;

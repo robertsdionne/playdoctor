@@ -12,6 +12,7 @@
         public static var gravity:int = -25;
 		public var jumping:Boolean = false;
         public var level: int = 1;
+        public var timeAlive:int;
 
         public function Player(x:int,y:int){
             super(x,y);
@@ -34,6 +35,8 @@
             var _jumppower:int = 430;
             var maxHeight:int = 30;
             var playerOriginPoint:int = this.y;
+
+            timeAlive++;
 
             acceleration.x = 0;
             acceleration.y = 0;
