@@ -11,7 +11,6 @@ package
         public static var t: FlxText;
         public var ekgs: Array;
         public var gaps: Array;
-        public var _gap: GapBox;
         public var suddenGapX: int;
         public var suddenGapY: int;
         public var gapTime: int;
@@ -24,27 +23,22 @@ package
             ekgs = [];
             for (var i: int = 0; i < 2; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 100, 420, 100.0, 8.0 + 8.0 * i);
+                    70.0 + 150.0 * i, makeColor(Math.random(), Math.random(), Math.random()), 3.0 - 2.0 * i, 50.0, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
 
                 this.add(item);
             }
 
-            gaps = [];
-
             gapForEachEKG();
 
             vit = [];
-            for (var i: int = 0; i < 10; ++i) {
-                var vitPoints: Number = 220 - (10*_player.level)
+            for (var j: int = 0; j < 10; ++j) {
+                var vitPoints: Number = 220 - (10*_player.level);
                 vit.push(vitPoints);
             }
 
             _hud = new HUD(ekgs[0], _player);
             this.add(_hud);
-
-            _gap = new GapBox(suddenGapX,suddenGapY,1);
-            this.add(_gap);
         }
 
         private function makeColor(red: Number, green: Number, blue: Number): uint {
@@ -60,14 +54,16 @@ package
             ekgCollide();
             hitLevelAbove();
 
-            if (ekgs[_gap.level - 1]) {
-                suddenGapX = (ekgs[_gap.level - 1].ekgGap()) - _gap.width*0.5;
-                suddenGapY = (ekgs[_gap.level - 1].getYCoordinateAt(suddenGapX)) - _gap.width*0.5;
-                _gap.x = suddenGapX;
-                _gap.y = suddenGapY;
+            for (var i: int = 0; i < gaps.length; ++i) {
+                var gap: GapBox = gaps[i];
+                if (ekgs[gap.level - 1]) {
+                    suddenGapX = (ekgs[gap.level - 1].ekgGap()) - gap.width*0.5;
+                    suddenGapY = (ekgs[gap.level - 1].getYCoordinateAt(suddenGapX)) - gap.width*0.5;
+                    gap.x = suddenGapX;
+                    gap.y = suddenGapY;
+                }
+                FlxG.overlap(_player, gap, gapOverlap);
             }
-
-            FlxG.overlap(_player, _gap, gapOverlap);
 
             if (FlxG.keys.justPressed("Q") && _player.level < 100) {
                 _player.level += 1;
@@ -81,11 +77,12 @@ package
             }
         }
 
-        public function gapForEachEKG():void{
-            var i:int = new int;
-            for (i=0;i<ekgs.length;i++){
-                _gap = new GapBox(suddenGapX,suddenGapY,i);
-                this.add(_gap);
+        public function gapForEachEKG(): void{
+            gaps = [];
+            for (var i: int = 0; i < ekgs.length; ++i){
+                var gap: GapBox = new GapBox(300 + 30 * i, 200, i + 1)
+                gaps.push(gap);
+                this.add(gap);
             }
         }
 
@@ -107,8 +104,8 @@ package
             _player.upPressLimit = 4;
         }
 
-        public function gapOverlap(player: FlxObject, gap:GapBox): void {
-            if(_gap.level == _player.level){
+        public function gapOverlap(player: FlxObject, gap: GapBox): void {
+            if(gap.level == _player.level){
                 _player.level -= 1;
             } else {
                 _player.level += 1;
