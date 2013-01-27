@@ -116,10 +116,13 @@ package
         }
 
         public function gapOverlap(player: FlxObject, gap: GapBox): void {
-            if(gap.level == _player.level){
-                _player.level -= 1;
-            } else {
-                _player.level += 1;
+            if (gap.mayCollide()) {
+                if(gap.level == _player.level){
+                    _player.level -= 1;
+                } else {
+                    _player.level += 1;
+                }
+                gap.collide();
             }
         }
 
