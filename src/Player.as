@@ -8,7 +8,7 @@
 
 		[Embed(source="../assets/sprites/player_sheet.png")] private var ImgPlayer:Class;
 		
-        public var upPressLimit:int = 4;
+        public var upPressLimit:int = 3;
         public static var gravity:int = -25;
 		public var jumping:Boolean = false;
 
@@ -20,6 +20,7 @@
 			addAnimation("jump",[0,1,2,3],14);
 			addAnimation("fall",[4,5],14,false);
 			addAnimation("run",[6,7,8,9,10,11,12,13],14,true);
+            flicker(0);
 
             var runSpeed:uint = 10;
             drag.x = runSpeed*80;
