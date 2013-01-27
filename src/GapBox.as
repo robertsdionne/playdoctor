@@ -13,7 +13,7 @@ package
 
         public function GapBox(x:int,y:int,level:int){
 
-            makeGraphic(40,20,0xff000000);
+            makeGraphic(20,20,0xff000000);
             this.x = x;
             this.y = y;
             this.level = level;

@@ -81,10 +81,10 @@ package
             for (var j: int = 0; j < ekgs.length; ++j) {
                 var target : Number = 2.0 * FlxG.height / 3.0 - 200.0 * (j - _player.level + 1);
                 if (ekgs[j].y > target) {
-                    ekgs[j].y -= 2.0;
+                    ekgs[j].y += (target - ekgs[j].y) / 10.0;
                 }
                 if (ekgs[j].y < target) {
-                    ekgs[j].y += 2.0;
+                    ekgs[j].y += (target - ekgs[j].y) / 10.0;
                 }
             }
 
