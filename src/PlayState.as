@@ -20,9 +20,10 @@ package
         public var gapTime: int;
         public var vit:Array;
         public var _gapDisplayGrp:FlxGroup = new FlxGroup;
+        private var maxLevel: int;
 
         override public function create(): void {
-            _player = new Player(200,200);
+            _player = new Player(200,2.0 * FlxG.height / 3.0);
 
             _colArray = [];
             _colArray.push(0x00ff3c);
@@ -35,7 +36,7 @@ package
             ekgs = [];
             for (var i: int = 0; i < 100; ++i) {
                 var item: Ekg = new Ekg(0, 2.0 * FlxG.height / 3.0 - 200.0 * i,
-                    220 - (2 * i), makeColor(), 3.0 - 2.0 * i,i + 1, 50.0, _player, 100 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
+                    220 - (2 * i), makeColor(), 3.0 - 2.0 * i,i + 1, 50.0, _player, 25 + 20 * i, 420, 100.0, 8.0 + 8.0 * i);
                 ekgs.push(item);
 
                 this.add(item);
@@ -55,6 +56,7 @@ package
 
             _hud = new HUD(ekgs[0], _player, vit);
             this.add(_hud);
+            maxLevel = 1;
         }
 
         private function makeColor(): uint {
@@ -67,6 +69,8 @@ package
             ekgCollide();
             hitLevelAbove();
 
+            maxLevel = Math.max(maxLevel, _player.level);
+
             if (ekgs[_player.level-1]) {
                 vit[_player.level-1] -= 0.1;
                 if (vit[_player.level-1] < 0.0) {
@@ -75,6 +79,7 @@ package
                 ekgs[_player.level-1].setVitality(vit[_player.level-1]);
                 if (vit[_player.level-1] <= 0.0) {
                     _player.kill();
+                    FlxG.switchState(new GameOver(maxLevel));
                 }
             }
 
@@ -88,7 +93,7 @@ package
                 }
             }
 
-            for (var i: int = 0; i < gaps.length; ++i) {
+            for (var i: int = 1; i < gaps.length; ++i) {
                 var gap: GapBox = gaps[i];
                 if (ekgs[gap.level - 1]) {
                     suddenGapX = (ekgs[gap.level - 1].ekgGap()) - gap.width*0.5;
@@ -104,16 +109,16 @@ package
             }
 
             if (FlxG.keys.justPressed("Q") && _player.level < 100) {
-                _player.level += 1;
+            //    _player.level += 1;
             }
             if (FlxG.keys.justPressed("Z") && _player.level > 0) {
-                _player.level -= 1;
+            //    _player.level -= 1;
             }
 
             if(_player.y >= FlxG.height - _player.height){
                 _player.kill();
                 this.kill();
-                FlxG.switchState(new GameOver());
+                FlxG.switchState(new GameOver(maxLevel));
             }
         }
 
@@ -171,8 +176,8 @@ package
         }
 
         public function borderCollide(wallSprite: FlxSprite): void{
-            if (wallSprite.x >= 420 - wallSprite.width) {
-                wallSprite.x = FlxG.width - wallSprite.width;
+            if (wallSprite.x >= 425 - wallSprite.width) {
+                wallSprite.x = 425 - wallSprite.width;
             }
             if (wallSprite.x <= 0) {
                 wallSprite.x = 0;

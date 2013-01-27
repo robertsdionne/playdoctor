@@ -85,7 +85,7 @@ package {
     public function setVitality(vitality: Number): void {
       beatsPerMinute = vitality > 0.0 ? vitality : 0.1;
       waveFrequency = beatsPerMinute / 10.0;
-      waveAmplitude = beatsPerMinute / 3.0 + 50.0;
+      waveAmplitude = beatsPerMinute / 4.0 + 50.0;
       if (vitality <= 0.0 && !flatlined) {
         FlxG.play(beepDeadSound);
         player.kill();
