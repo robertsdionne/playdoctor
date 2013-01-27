@@ -11,7 +11,7 @@ package
             makeGraphic(20,20,0xffCC0000);
             this.x = x;
             this.y = y;
-            level = level;
+            this.level = level;
         }
     }
 }

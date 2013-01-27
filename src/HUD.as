@@ -19,7 +19,8 @@ package{
 		public var _heightDisplay:FlxText = new FlxText(40,FlxG.height - 40,100,"0");
 		public var _levelDisplay:FlxText = new FlxText(465,210,150,"1");
 		public var _ctrlsDisplay:FlxText = new FlxText(150,FlxG.height - 40,250,"KYBRD CTRLS: LFT RGHT SPCE")
-		public var _timeDisplay:FlxText = new FlxText(530,170,100,"0")
+		public var _timeDisplay:FlxText = new FlxText(530,165,100,"0")
+		private var _elapsed:FlxText = new FlxText(530,165,100,"ELPSD:")
 		private var _p:Player;
 		public var _reflection:FlxSprite = new FlxSprite;
 		private var _pwrBar:FlxSprite = new FlxSprite;
@@ -60,6 +61,10 @@ package{
 			_levelDisplay.color = 0x17eaf3;
 			_levelDisplay.size = 72;
 			this.add(_levelDisplay);
+
+			_elapsed.color = 0xaeff00;
+			_elapsed.size = 12;
+			this.add(_elapsed);
 
 			_timeDisplay.color = 0xaeff00;
 			_timeDisplay.size = 12;
