@@ -31,7 +31,7 @@ package
             _hud = new HUD(ekgs[0], _player);
             this.add(_hud);
 
-            _gap = new GapBox(suddenGapX,suddenGapY);
+            _gap = new GapBox(suddenGapX,suddenGapY,1);
             this.add(_gap);
         }
 
@@ -47,9 +47,9 @@ package
             borderCollide(_player);
             ekgCollide();
 
-            if (ekgs[_player.level - 1]) {
-                suddenGapX = (ekgs[_player.level - 1].ekgGap()) - _gap.width*0.5;
-                suddenGapY = (ekgs[_player.level - 1].getYCoordinateAt(suddenGapX)) - _gap.width*0.5;
+            if (ekgs[_gap.level - 1]) {
+                suddenGapX = (ekgs[_gap.level - 1].ekgGap()) - _gap.width*0.5;
+                suddenGapY = (ekgs[_gap.level - 1].getYCoordinateAt(suddenGapX)) - _gap.width*0.5;
                 _gap.x = suddenGapX;
                 _gap.y = suddenGapY;
             }
@@ -61,6 +61,10 @@ package
             }
             if (FlxG.keys.justPressed("Z") && _player.level > 0) {
                 _player.level -= 1;
+            }
+
+            if(_player.level == 0 && _player.y >= FlxG.height - _player.height){
+                _player.kill();
             }
         }
 
@@ -75,13 +79,6 @@ package
                 } else {
                     _player.jumping = true;
                 }
-
-                var suddenPushGap : int = ekgs[_player.level - 1].getYCoordinateAt(_gap.x + _gap.width);
-                if(_gap.y + _gap.height > suddenPushGap){
-                    _gap.y = suddenPushGap - 0.5;
-                    _gap.velocity.y =+ 430;
-                    _gap.x++;
-                }
             }
         }
 
@@ -90,7 +87,12 @@ package
         }
 
         public function gapOverlap(player: FlxObject, gap:GapBox): void {
-            _player.velocity.y =+ 430;
+            if(_gap.level == _player.level){
+                _player.level -= 1;
+            } else {
+                _player.level += 1;
+            }
+
         }
 
         public function borderCollide(wallSprite: FlxSprite): void{

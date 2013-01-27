@@ -7,7 +7,7 @@
     public class Player extends FlxSprite{
 
 		[Embed(source="../assets/sprites/player_sheet.png")] private var ImgPlayer:Class;
-		
+
         public var upPressLimit:int = 3;
         public static var gravity:int = -25;
 		public var jumping:Boolean = false;
@@ -30,7 +30,7 @@
         }
 
         override public function update():void{
-           
+
             var _jumppower:int = 430;
             var maxHeight:int = 30;
             var playerOriginPoint:int = this.y;
@@ -52,7 +52,7 @@
                     velocity.y = -_jumppower;
                 }
             }
-			
+
 			if(jumping == true){
 				if(velocity.y < 0){
 				play("jump");
@@ -66,6 +66,7 @@
 					play("idle");
 				}
 			}
+
 			super.update();
         }
     }
