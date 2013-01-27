@@ -23,7 +23,7 @@ package
                 70.0, 0x00ff3c, 3.0, 50.0, 512, 420, 100.0, 8.0);
             this.add(ekg);
 
-            _hud = new HUD(ekg);
+            _hud = new HUD(ekg,_player);
             this.add(_hud);
 
             _gap = new GapBox(suddenGapX,suddenGapY);
