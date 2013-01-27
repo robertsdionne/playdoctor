@@ -17,15 +17,11 @@ package {
     private var curve: Array;
     private var curveColor: uint;
     private var curveThickness: Number;
-    private var frequency: Number;
     private var lastTime: Number;
-    private var mean: Number;
     private var noiseAmplitude: Number;
     private var offsetIndex: int;
-    private var period: Number;
     private var samplesPerSecond: Number;
     private var screenWidth: int;
-    private var variance: Number;
     private var waveAmplitude: Number;
     private var waveFrequency: Number;
 
@@ -50,16 +46,32 @@ package {
       this.screenWidth = screenWidth;
       this.waveAmplitude = waveAmplitude;
       this.waveFrequency = waveFrequency;
-      this.frequency = this.beatsPerMinute / BPM_PER_HERTZ;
-      this.period = 1.0 / this.frequency;
-      this.mean = this.period / 2.0;
-      this.variance = 1.0 / (100.0 * this.frequency * this.frequency);
       this.curve = [];
       for (var i: int = 0; i < screenWidth; ++i) {
         this.curve[i] = 0.0;
       }
       this.offsetIndex = 0;
       this.lastTime = getTime();
+    }
+
+    private function frequency(): Number {
+      return beatsPerMinute / BPM_PER_HERTZ;
+    }
+
+    private function period(): Number {
+      return 1.0 / frequency();
+    }
+
+    private function mean(): Number {
+      return period() / 2.0;
+    }
+
+    private function variance(): Number {
+      return 1.0 / (100.0 * frequency() * frequency());
+    }
+
+    public function setVitality(vitality: Number): void {
+      this.beatsPerMinute = vitality;
     }
 
     override public function draw(): void {
@@ -85,8 +97,8 @@ package {
     }
 
     private function g(t: Number): Number {
-      var tMod: Number = t % period;
-      return -1.0 * Math.exp(-1.0 / 2.0 * (tMod - mean) * (tMod - mean) / variance);
+      var tMod: Number = t % period();
+      return -1.0 * Math.exp(-1.0 / 2.0 * (tMod - mean()) * (tMod - mean()) / variance());
     }
 
     private function drawCurve(start: FlxPoint, points: Array, thickness: Number = 1, color: uint = 0): void {
